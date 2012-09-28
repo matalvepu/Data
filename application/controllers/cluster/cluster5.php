@@ -11,10 +11,11 @@ class Cluster5 extends CI_Controller
 
 
             $stationName= "Sylhet";
-          
 
-            $title = "Cluster distribution from $syear to $eyear of months ($startMonth - ".($startMonth+3).") in $stationName";
-            $yAxistitle = "Cluster";
+            $startMonthString = $this->getMonthString($startMonth);
+            $endMonthYear = $this->getMonthString($startMonth+3);
+            $title = "Cluster distribution from $syear to $eyear of months ($startMonthString - $endMonthYear) in $stationName";
+            $yAxistitle = "Cluster #";
 
              
              $data['array'] = $this->clusterDistribution4months($stationName,$syear,$eyear,$startMonth);
@@ -25,6 +26,12 @@ class Cluster5 extends CI_Controller
            
 
         }
+        function getMonthString($n)
+        {
+            $timestamp = mktime(0, 0, 0, $n, 1, 2005);
+
+            return date("M", $timestamp);
+        }
        
         public function clusterDistribution4months($stationName,$syear,$eyear,$startMonth)
         {
@@ -33,7 +40,7 @@ class Cluster5 extends CI_Controller
 
             $array[] = 'Year';
             for($month=$startMonth;$month<$startMonth+4;$month++)
-                $array[]=$month;
+                $array[]=  $this->getMonthString ($month);
 
             $php_array[]=$array;
 

@@ -14,7 +14,8 @@ echo $array;
           title: '<?php echo $title;?>',
           vAxis: {
               title: "<?php echo $yAxistitle;?>",
-              maxValue: 8
+              maxValue: 5,
+              minValue : 1
             },
             hAxis:  
                 {

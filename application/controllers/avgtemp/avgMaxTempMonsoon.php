@@ -1,28 +1,26 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class AvgMaxTempMonthly extends CI_Controller
+class avgMaxTempMonsoon extends CI_Controller
 {
      
 	public function index()
 	{
-
-            $sid = 11;
+            $sid = 1;
             $syear=1956;
             $eyear = 2009;
-	    $month=12;
+	           
+            $months=array(6,7,8,9);
             
             $this->load->model('station');
             $stationName= $this->station->getName($sid);
-           // $ltl = ($which==1)?"1st":"2nd";
-            
-            $fileName = "avgMax ".$stationName."_".$month;
-            $this->avgMaxTemp($sid,$month,$syear,$eyear,$fileName);
+            // $ltl = ($which==1)?"1st":"2nd";
 
-            
-            
+            $fileName = "avgMaxMOnsoon ".$stationName;
+            $this->avgMaxTemp($sid,$months,$syear,$eyear,$fileName);
+
         }
 
-        public function avgMaxTemp($sid,$month,$syear,$eyear,$fileName)
+        public function avgMaxTemp($sid,$monthArray,$syear,$eyear,$fileName)
         {
             
             $this->load->model('weatherDataTemp');
@@ -30,15 +28,24 @@ class AvgMaxTempMonthly extends CI_Controller
             $array[] = array('Year','AvgMax');
             for($year = $syear ; $year <= $eyear ; $year++)
             {
-                $avgMin = $this->weatherDataTemp->avgMaxTempMonthYear($sid,$month,$year);
-                $array[] =array($year,$avgMin);
+                $avg = 0;
+                $count = 0;
+                foreach ($monthArray as $month)
+                {
+                    $avg += $this->weatherDataTemp->avgMaxTempMonthYear($sid,$month,$year);
+                    $count++;
+                //    echo "$year - $month <br/>";
+                }
+                $avg /= $count;
+                
+                $array[] =array($year,$avg);
                 //$phpArray[] = array("".$year,$avgMin,$avgMax);
             }
 
             $this->array_to_csv($array, $fileName.'\.csv');
 	}
 	
-	function array_to_csv($array, $download = "")
+    function array_to_csv($array, $download = "")
     {
         if ($download != "")
         {
